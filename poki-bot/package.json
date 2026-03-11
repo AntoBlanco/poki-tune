@@ -1,0 +1,26 @@
+{
+  "name": "poki-bot",
+  "module": "index.ts",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "start": "bun src/index.ts",
+    "build": "bun build ./src/index.ts --outdir ./dist --target node",
+    "deploy": "bun src/features/music-commands/infrastructure/discord/deploy-commands.ts",
+    "dev": "bun --watch src/index.ts",
+    "dev-hot": "bun --hot src/index.ts",
+    "test": "bun test"
+  },
+  "devDependencies": {
+    "@types/bun": "^1.3.9",
+    "@types/node": "^25.3.3",
+    "eslint": "^10.0.2"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  },
+  "dependencies": {
+    "discord.js": "^14.25.1",
+    "ioredis": "^5.10.0"
+  }
+}

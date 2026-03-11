@@ -1,0 +1,27 @@
+{
+  "name": "music-worker",
+  "module": "index.ts",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "start": "bun src/index.ts",
+    "build": "bun build ./src/index.ts --outdir ./dist --target node",
+    "deploy": "bun src/features/music-commands/infrastructure/discord/deploy-commands.ts",
+    "dev": "bun --watch src/index.ts",
+    "dev-hot": "bun --hot src/index.ts",
+    "test": "bun test"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "@types/node": "^25.4.0",
+    "eslint": "^10.0.3"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  },
+  "dependencies": {
+    "discord.js": "^14.25.1",
+    "ioredis": "^5.10.0",
+    "shoukaku": "^4.3.0"
+  }
+}

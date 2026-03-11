@@ -1,0 +1,68 @@
+services:
+  # 1. Base de datos para la cola y el estado
+  redis:
+    image: redis:7-alpine
+    container_name: poki_redis
+    networks:
+      - poki_network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  # 2. Servidor de Audio (Java)
+  lavalink:
+    image: ghcr.io/lavalink-devs/lavalink:4
+    container_name: poki_lavalink
+    volumes:
+      - ./lavalink/application.yml:/opt/Lavalink/application.yml
+    networks:
+      - poki_network
+    environment:
+      - _JAVA_OPTIONS=-Xmx512M
+    healthcheck:
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:2333/ || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # 3. Emisor de Comandos (Bun)
+  poki_bot_emitter:
+    build: 
+      context: ./poki-bot
+      dockerfile: Dockerfile
+    container_name: poki_bot_emitter
+    depends_on:
+      redis:
+        condition: service_healthy
+    env_file: .env
+    environment:
+      - REDIS_HOST=redis
+    networks:
+      - poki_network
+    restart: always
+
+  # 4. Procesador de Música (Bun + Shoukaku)
+  music-worker:
+    build:
+      context: ./worker-service
+      dockerfile: Dockerfile
+    container_name: poki_music_worker
+    depends_on:
+      redis:
+        condition: service_healthy
+      lavalink:
+        condition: service_healthy
+    env_file: .env
+    environment:
+      - REDIS_HOST=redis
+      - LAVALINK_HOST=lavalink
+      - LAVALINK_PASS=${LAVALINK_PASS:-youshallnotpass}
+    networks:
+      - poki_network
+    restart: always
+
+networks:
+  poki_network:
+    driver: bridge
