@@ -21,7 +21,7 @@
     "typescript": "^5"
   },
   "dependencies": {
-    "discord.js": "^14.25.1",
+    "discord.js": "^13.17.1",
     "ioredis": "^5.10.0",
     "shoukaku": "^4.3.0",
     "ws": "^8.19.0"

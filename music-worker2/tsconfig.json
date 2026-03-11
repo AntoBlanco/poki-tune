@@ -1,21 +1,23 @@
 {
   "compilerOptions": {
-    "lib": ["ESNext"],
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "lib": [
+      "ESNext"
+    ],
     "target": "ESNext",
-    "module": "ESNext",         // Cambiado de Preserve a ESNext
+    "module": "NodeNext",
     "moduleDetection": "force",
     "jsx": "react-jsx",
     "allowJs": true,
-
     // Configuración para Node
-    "moduleResolution": "node", // Cambiado de bundler a node (o NodeNext)
-    "allowImportingTsExtensions": false, // Node no permite importar .ts directamente
+    "moduleResolution": "NodeNext",
+    "allowImportingTsExtensions": false,
     "allowSyntheticDefaultImports": true,
-    "verbatimModuleSyntax": false, 
-    "noEmit": false,             // Si vas a compilar para producción, ponlo en false
-
+    "verbatimModuleSyntax": false,
+    "noEmit": false,
     "strict": true,
     "skipLibCheck": true,
-    "esModuleInterop": true      // Importante para librerías como ioredis
+    "esModuleInterop": true
   }
 }

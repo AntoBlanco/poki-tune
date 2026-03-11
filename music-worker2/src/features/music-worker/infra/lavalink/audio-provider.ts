@@ -1,7 +1,7 @@
 import { Shoukaku, Connectors, type NodeOption } from "shoukaku";
 // ✅ CAMBIO: Importamos el paquete completo para compatibilidad con Node ESM
 import * as Discord from "discord.js";
-const { Client, GatewayIntentBits } = Discord;
+const { Client, Intents } = Discord as any;
 
 // 2. Importamos solo los TIPOS (para que TS no se queje)
 import type { Client as ClientType } from "discord.js";
@@ -19,16 +19,16 @@ export class AudioProvider {
     config: Config,
   ) {
     this.config = config;
-    // ✅ Ahora GatewayIntentBits funcionará correctamente
+    // ✅ Ahora Intents funcionará correctamente
     this.client = new Client({
-      intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildVoiceStates],
+      intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_VOICE_STATES],
     });
   }
 
   async init(token: string) {
     await this.client.login(token);
     console.log(`✅ Discord Client del Worker iniciado como ${this.client.user?.tag}`);
-    
+
     const nodes: NodeOption[] = [
       {
         name: "Local-Lavalink",

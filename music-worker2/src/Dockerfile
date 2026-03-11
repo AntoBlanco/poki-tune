@@ -1,29 +1,40 @@
-# ETAPA 1: Construcción (Builder)
-FROM oven/bun:1.3-alpine AS builder
+# ETAPA 1: Construcción
+FROM node:22-alpine AS builder
 WORKDIR /app
 
-# Copiamos archivos de dependencias primero para cachear capas
-COPY package.json bun.lock* ./
-RUN bun install
+# Instalamos dependencias de compilación
+RUN apk add --no-cache python3 make g++
 
-# Copiamos el resto del código
+# Copiamos archivos de dependencias
+COPY package*.json ./
+
+# ✅ CRUCIAL: Instalamos TODO (incluyendo typescript) para poder compilar
+# Usamos install en lugar de ci si no tienes un package-lock.json actualizado
+RUN npm install
+
 COPY . .
 
-# Generamos el bundle de JS (Esto valida que el TS sea correcto)
-# Asegúrate de que este script esté en tu package.json
-RUN bun run build 
+# ✅ Usamos npx para asegurar que use el binario local de node_modules
+RUN npx tsc
 
-# ETAPA 2: Ejecución (Runner) - Imagen final mucho más pequeña
-FROM oven/bun:1.3-alpine
+---
+
+# ETAPA 2: Ejecución
+FROM node:22-alpine
 WORKDIR /app
-
-# Solo traemos lo estrictamente necesario de la etapa anterior
-COPY --from=builder /app/dist ./dist
-COPY --from=builder /app/package.json ./
-# Copiamos node_modules porque Bun/Lavalink a veces requieren librerías nativas
-COPY --from=builder /app/node_modules ./node_modules 
 
 ENV NODE_ENV=production
 
-# Ejecutamos el archivo generado en /dist
-CMD ["bun", "dist/index.js"]
+# Copiamos solo lo necesario
+COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/package*.json ./
+
+# ✅ Instalamos solo dependencias de producción (aquí sí omitimos dev)
+RUN npm install --omit=dev
+
+# Si usas librerías nativas que requieran python/make, deberías instalarlas aquí también
+# pero normalmente para Shoukaku/Discord.js no hace falta en la etapa final.
+
+USER node
+
+CMD ["node", "dist/index.js"]

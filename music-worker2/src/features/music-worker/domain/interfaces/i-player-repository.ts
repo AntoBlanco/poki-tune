@@ -1,4 +1,4 @@
-import { PlaybackMode, Player } from "../entities/music";
+import { PlaybackMode, Player } from "../entities/music.js";
 
 export interface PlayerState {
   mode: PlaybackMode;

@@ -4,9 +4,10 @@
   "description": "",
   "main": "index.ts",
   "scripts": {
-    "start": "tsx src/index.ts",
-    "deploy": "tsx src/features/music-commands/infrastructure/discord/deploy-commands.ts",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "deploy": "tsx --no-deprecation src/features/music-commands/infrastructure/discord/deploy-commands.ts",
+    "build": "tsc",
+    "start": "node --no-deprecation dist/index.js",
+    "dev": "tsx --no-deprecation src/index.ts"
   },
   "keywords": [],
   "author": "",
@@ -22,6 +23,8 @@
     "@types/node": "^25.4.0",
     "@types/ws": "^8.18.1",
     "eslint": "^10.0.3",
-    "tsx": "^4.21.0"
+    "tsc": "^2.0.4",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3"
   }
 }

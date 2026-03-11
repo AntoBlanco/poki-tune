@@ -1,5 +1,5 @@
 import { Redis } from "ioredis";
-import { PlaybackManager } from "../domain/services/playback-manager";
+import { PlaybackManager } from "../domain/services/playback-manager.js";
 
 export class MusicConsumer {
   constructor(

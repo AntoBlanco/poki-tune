@@ -1,6 +1,6 @@
-import type { IPlayerRepository } from "../interfaces/i-player-repository";
-import { AudioProvider } from "../../infra/lavalink/audio-provider";
-import { PlaybackMode } from "../entities/music"; // Importa el Enum
+import type { IPlayerRepository } from "../interfaces/i-player-repository.js";
+import { AudioProvider } from "../../infra/lavalink/audio-provider.js";
+import { PlaybackMode } from "../entities/music.js"; // Importa el Enum
 
 export class PlaybackManager {
   constructor(

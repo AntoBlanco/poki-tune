@@ -1,6 +1,6 @@
 import { Redis } from "ioredis";
-import type { IPlayerRepository, PlayerState, } from "../../domain/interfaces/i-player-repository";
-import { PlaybackMode, Player } from "../../domain/entities/music";
+import type { IPlayerRepository, PlayerState, } from "../../domain/interfaces/i-player-repository.js";
+import { PlaybackMode, Player } from "../../domain/entities/music.js";
 
 export class RedisPlayerRepository implements IPlayerRepository {
   constructor(private redis: Redis) {}
