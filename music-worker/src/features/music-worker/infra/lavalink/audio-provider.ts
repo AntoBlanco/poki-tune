@@ -19,11 +19,14 @@ export class AudioProvider {
         name: "Local-Lavalink",
         url: `${config.lavalink.host}:${config.lavalink.port}`,
         auth: config.lavalink.password,
+        secure: false,
       },
     ];
 
     // 2. Pasamos el cliente al Conector
-    this.shoukaku = new Shoukaku(new Connectors.DiscordJS(this.client), nodes);
+    this.shoukaku = new Shoukaku(new Connectors.DiscordJS(this.client), nodes, {
+      moveOnDisconnect: true,
+    });
 
     this.setupEventListeners();
   }

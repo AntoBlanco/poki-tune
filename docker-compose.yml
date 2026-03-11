@@ -28,10 +28,10 @@ services:
       retries: 5
 
   # 3. Emisor de Comandos (Bun)
-  poki_bot_emitter:
+  bot_emitter:
     build: 
       context: ./poki-bot
-      dockerfile: Dockerfile
+      dockerfile: ./src/Dockerfile
     container_name: poki_bot_emitter
     depends_on:
       redis:
@@ -46,8 +46,8 @@ services:
   # 4. Procesador de Música (Bun + Shoukaku)
   music-worker:
     build:
-      context: ./worker-service
-      dockerfile: Dockerfile
+      context: ./music_worker
+      dockerfile: ./src/Dockerfile
     container_name: poki_music_worker
     depends_on:
       redis:
