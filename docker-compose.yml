@@ -22,7 +22,7 @@ services:
     environment:
       - _JAVA_OPTIONS=-Xmx512M
     healthcheck:
-      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:2333/ || exit 1"]
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider --header='Authorization: youshallnotpass' http://localhost:2333/v4/info || exit 1"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -46,7 +46,7 @@ services:
   # 4. Procesador de Música (Bun + Shoukaku)
   music-worker:
     build:
-      context: ./music_worker
+      context: ./music-worker
       dockerfile: ./src/Dockerfile
     container_name: poki_music_worker
     depends_on:
@@ -56,9 +56,10 @@ services:
         condition: service_healthy
     env_file: .env
     environment:
+      - BUN_CONFIG_MAX_HTTP_REQUEST_SIZE=10485760
       - REDIS_HOST=redis
       - LAVALINK_HOST=lavalink
-      - LAVALINK_PASS=${LAVALINK_PASS:-youshallnotpass}
+      - LAVALINK_PASSWORD=${LAVALINK_PASSWORD} # Asegúrate de que coincida con application.yml
     networks:
       - poki_network
     restart: always

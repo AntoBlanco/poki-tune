@@ -1,13 +1,17 @@
-process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 import { Shoukaku, Connectors, type NodeOption } from "shoukaku";
-import { Client, GatewayIntentBits } from "discord.js";
+// ✅ CAMBIO: Importamos el paquete completo para compatibilidad con Node ESM
+import * as Discord from "discord.js";
+const { Client, GatewayIntentBits } = Discord;
+
+// 2. Importamos solo los TIPOS (para que TS no se queje)
+import type { Client as ClientType } from "discord.js";
+
 import { Redis } from "ioredis";
-import type { Config } from "../../../../config/config";
+import type { Config } from "../../../../config/config.js"; // Añadido .js por si acaso
 
 export class AudioProvider {
-  // Ahora permitimos que sea null al inicio
   public shoukaku: Shoukaku | null = null;
-  private client: Client;
+  private client: ClientType;
   private config: Config;
 
   constructor(
@@ -15,21 +19,16 @@ export class AudioProvider {
     config: Config,
   ) {
     this.config = config;
+    // ✅ Ahora GatewayIntentBits funcionará correctamente
     this.client = new Client({
       intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildVoiceStates],
     });
   }
 
-  // MÉTODO CORREGIDO: Primero login, luego Shoukaku
   async init(token: string) {
     await this.client.login(token);
-    console.log(
-      `✅ Discord Client del Worker iniciado como ${this.client.user?.tag}`,
-    );
-    console.log(
-      `DEBUG - Intentando conectar a Lavalink con ID: ${this.client.user?.id}`,
-    );
-
+    console.log(`✅ Discord Client del Worker iniciado como ${this.client.user?.tag}`);
+    
     const nodes: NodeOption[] = [
       {
         name: "Local-Lavalink",
@@ -39,10 +38,9 @@ export class AudioProvider {
       },
     ];
 
-    // Ahora que el bot está logueado, Shoukaku puede obtener el ID correctamente
     this.shoukaku = new Shoukaku(new Connectors.DiscordJS(this.client), nodes, {
       moveOnDisconnect: true,
-      resume: false, // Recomendado para microservicios: true
+      resume: false,
       reconnectTries: 10,
       restTimeout: 15000,
       reconnectInterval: 5000,
@@ -64,21 +62,14 @@ export class AudioProvider {
   }
 
   async play(guildId: string, voiceId: string, url: string) {
-    // Verificación de seguridad
     if (!this.shoukaku) throw new Error("Shoukaku no ha sido inicializado");
 
     const node = this.shoukaku.options.nodeResolver(this.shoukaku.nodes);
     if (!node) throw new Error("No hay nodos de Lavalink disponibles");
 
     const result = await node.rest.resolve(url);
-    if (
-      !result?.data ||
-      result.loadType === "empty" ||
-      result.loadType === "error"
-    )
-      return;
+    if (!result?.data || result.loadType === "empty" || result.loadType === "error") return;
 
-    // En Lavalink v4/Shoukaku v4, el track suele estar en result.data (si es track) o result.data.tracks (si es search)
     const track = Array.isArray(result.data)
       ? result.data[0]
       : (result.data as any).tracks?.[0] || result.data;
@@ -89,7 +80,6 @@ export class AudioProvider {
       shardId: 0,
     });
 
-    // En v4 se usa el objeto track completo o el encoded
     await player.playTrack({ track: track.encoded || track });
 
     player.on("end", async () => {

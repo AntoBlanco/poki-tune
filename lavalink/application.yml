@@ -4,7 +4,7 @@ server:
 
 lavalink:
   server:
-    password: "youshallnotpass" # Debe coincidir con tu .env
+    password: youshallnotpass # Debe coincidir con tu .env
     sources:
       youtube: true
       bandcamp: true
@@ -25,6 +25,8 @@ lavalink:
       channelMix: true
       lowPass: true
     bufferDurationMs: 400
+    youtubeSearchEnabled: true
+    socketTimeout: 10
     frameBufferDurationMs: 5000
     opusEncodingQuality: 10
     resamplingQuality: LOW
