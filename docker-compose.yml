@@ -46,7 +46,7 @@ services:
   # 4. Procesador de Música (Bun + Shoukaku)
   music-worker:
     build:
-      context: ./music-worker
+      context: ./music-worker2
       dockerfile: ./src/Dockerfile
     container_name: poki_music_worker
     depends_on:
