@@ -1,10 +1,11 @@
-import { loadConfig, type Config } from "./config/config.ts";
+import { loadConfig, printConfig, type Config } from "./config/config.ts";
 import { createRedisClient } from "./features/music-commands/infrastructure/redis/redis.client.ts";
 import { DiscordBot } from "./features/music-commands/infrastructure/discord/bot.client.ts";
 import { deploy } from "./features/music-commands/infrastructure/discord/deploy-commands.ts";
 
 async function bootstrap() {
   const config: Config = loadConfig();
+  printConfig
   if (process.env.NODE_ENV === "production") {
     console.log(
       "🛠️  Entorno de producción detectado. Sincronizando comandos...",

@@ -42,3 +42,30 @@ export function loadConfig(): Config {
     },
   };
 }
+
+export function printConfig(config: Config) {
+  console.log("🔧 Configuración Cargada:");
+  console.log(`- Discord Token: ${config.discord.token ? "✅" : "❌"}`);
+  console.log(`- Redis Host: ${config.redis.host}:${config.redis.port} and ${config.redis.password ? "with password" : "no password"}`);
+  console.log(`- Server: ${config.server.host}:${config.server.port} (${config.server.env})`);
+}
+// export function validateConfig(config: Config) {
+//   if (!config.discord.token) {
+//     throw new Error("DISCORD_TOKEN es obligatorio");
+//   }
+//   if (!config.discord.clientId) {
+//     throw new Error("DISCORD_CLIENT_ID es obligatorio");
+//   }
+//   if (!config.discord.guildId) {
+//     throw new Error("DISCORD_GUILD_ID es obligatorio");
+//   }
+//   // Podríamos agregar más validaciones aquí si es necesario
+// }
+
+// export function getConfig() {
+//   const config = loadConfig();
+//   validateConfig(config);
+//   return config;
+// }
+
+// export default getConfig;

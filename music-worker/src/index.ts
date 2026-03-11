@@ -2,11 +2,12 @@ import Redis from "ioredis";
 import { AudioProvider } from "./features/music-worker/infra/lavalink/audio-provider";
 import { PlaybackManager } from "./features/music-worker/domain/services/playback-manager";
 import { MusicConsumer } from "./features/music-worker/application/music-consumer";
-import { loadConfig } from "./config/config";
+import { loadConfig, printConfig } from "./config/config";
 import { RedisPlayerRepository } from './features/music-worker/infra/redis/redis-player.repository';
 
 async function main() {
   const config = loadConfig();
+  printConfig(config);
   const redis = new Redis({ host: config.redis.host, port: config.redis.port, password: config.redis.password });
   
   // Capa Infra
